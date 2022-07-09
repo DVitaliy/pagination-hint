@@ -51,7 +51,7 @@
     "semi": false,
     "singleQuote": false
   },
-  "name": "pagination-hint",
+  "name": "@dvitaliy/pagination-hint",
   "author": "DVitaliy",
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
