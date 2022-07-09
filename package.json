@@ -64,5 +64,13 @@
     "ts-jest": "^28.0.5",
     "ts-node": "^10.8.2",
     "typescript": "^4.7.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DVitaliy/pagination-hint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DVitaliy/pagination-hint/issues"
+  },
+  "homepage": "https://github.com/DVitaliy/pagination-hint#readme"
 }
