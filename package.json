@@ -72,5 +72,8 @@
   "bugs": {
     "url": "https://github.com/DVitaliy/pagination-hint/issues"
   },
-  "homepage": "https://github.com/DVitaliy/pagination-hint#readme"
+  "homepage": "https://github.com/DVitaliy/pagination-hint#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  }
 }
