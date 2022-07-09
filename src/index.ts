@@ -9,7 +9,6 @@ export const getPaginationRange = ({
   const after = current + Math.floor(lengthList / 2)
 
   let start: number
-  console.log("after", after)
   if (before < 1) start = 1
   else if (after > total) start = total - lengthList + 1
   else start = before
