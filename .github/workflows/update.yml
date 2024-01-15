@@ -24,8 +24,8 @@ jobs:
           echo ${{ vars.NEWVAR }}
 
       - name: Get patterns
-        if: ${{ !vars.NEWVAR }}
-        run: exit 1
+        if: ${{ vars.NEWVAR }}
+        run: return 0
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
