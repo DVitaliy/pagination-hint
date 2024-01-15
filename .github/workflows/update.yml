@@ -12,7 +12,7 @@ jobs:
       - name: Test
         run: |
           echo ${{ github.event_name }}
-          echo ${{ github.action_repository }}
+          echo ${{ github.event.action }}
           echo ${{ github.action_status }}
           echo ${{ github.actor }}
           echo ${{ github.actor_id }}
@@ -21,6 +21,10 @@ jobs:
           echo ${{ github.token }}
           echo ${{ github.workflow }}
           echo ${{ github.workspace }}
+
+      - name: Print GitHub Event
+        run: echo "${{ toJson(github.event) }}"
+
     # - name: Checkout Repository
     #   uses: actions/checkout@v3
     #   with:
