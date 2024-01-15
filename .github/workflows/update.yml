@@ -25,7 +25,13 @@ jobs:
 
       - name: Get patterns
         if: ${{ vars.NEWVAR }}
-        run: return 0
+        run: |
+          try {
+            const pattarns = "${{ vars.NEWVAR }}".split(",");
+            console.log(pattarns);
+          } catch(error) {
+            console.error(error);
+          }
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
