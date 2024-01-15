@@ -26,12 +26,8 @@ jobs:
       - name: Get patterns
         if: ${{ vars.NEWVAR }}
         run: |
-          try {
-            const pattarns = "${{ vars.NEWVAR }}".split(",");
-            console.log(pattarns);
-          } catch(error) {
-            console.error(error);
-          }
+          labels=$(echo "${{ toJson(github.event.issue.labels) }}")
+          echo "--- $labels"
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
