@@ -23,8 +23,17 @@ jobs:
           echo ${{ github.workspace }}
           echo ${{ vars.NEWVAR }}
 
-      # - name: Print GitHub Event
-      #   run: echo "${{ toJson(github.event) }}"
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
 
-      - name: Print GitHub Secrets
-        run: echo ${{ toJson(secrets) }}
+      - name: Print Node v
+        run: node -v
+
+      - name: Print GitHub Event
+        run: echo "${{ toJson(github.event) }}"
+
+      # - name: Print GitHub Secrets
+      #   run: echo ${{ toJson(secrets) }}
