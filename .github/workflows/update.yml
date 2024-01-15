@@ -21,7 +21,7 @@ jobs:
           echo ${{ github.token }}
           echo ${{ github.workflow }}
           echo ${{ github.workspace }}
-          echo ${{ env.NEWVAR }}
+          echo "NEWVAR - ${{ env.NEWVAR }}"
 
       - name: Print GitHub Event
         run: echo "${{ toJson(github.event) }}"
@@ -29,8 +29,8 @@ jobs:
       - name: Print GitHub Secrets
         run: echo "${{ toJson(secrets) }}"
 
-      - name: Print GitHub Env
-        run: echo "${{ toJson(env) }}"
+      # - name: Print GitHub Env
+      #   run: echo "${{ toJson(env) }}"
 
     # - name: Checkout Repository
     #   uses: actions/checkout@v3
