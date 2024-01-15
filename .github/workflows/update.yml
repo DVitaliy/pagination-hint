@@ -26,8 +26,7 @@ jobs:
       - name: Get patterns
         if: ${{ vars.NEWVAR }}
         run: |
-          labels=$(echo "${{ toJson(github.event.issue.labels) }}")
-          echo "--- $labels"
+          echo "${{ toJson(github.event.issue.labels) }}"
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
