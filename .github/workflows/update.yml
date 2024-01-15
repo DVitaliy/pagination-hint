@@ -22,6 +22,7 @@ jobs:
           echo ${{ github.workflow }}
           echo ${{ github.workspace }}
           echo ${{ github.env.NEWVAR }}
+          echo ${{ env.NEWVAR }}
 
       # - name: Print GitHub Event
       #   run: echo "${{ toJson(github.event) }}"
