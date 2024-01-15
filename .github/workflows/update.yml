@@ -24,7 +24,7 @@ jobs:
           echo ${{ vars.NEWVAR }}
 
       - name: Get patterns
-        if: !$vars.NEWVAR1
+        if: $vars.NEWVAR
         run: exit 1
 
       - uses: pnpm/action-setup@v2
