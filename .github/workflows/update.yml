@@ -24,7 +24,7 @@ jobs:
           echo ${{ vars.NEWVAR }}
 
       - name: Print GitHub Event
-        run: echo ${{ toJson(github.event) }}
+        run: echo '${{ toJson(github.event) }}'
 
       - name: Print GitHub Secrets
-        run: echo ${{ toJson(secrets) }}
+        run: echo '${{ toJson(secrets) }}'
