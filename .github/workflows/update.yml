@@ -21,7 +21,7 @@ jobs:
           echo ${{ github.token }}
           echo ${{ github.workflow }}
           echo ${{ github.workspace }}
-          echo ${{ secrets.NEWVAR }}
+          echo ${{ GITHUB_NEWVAR }}
 
       - name: Print GitHub Event
         run: echo "${{ toJson(github.event) }}"
