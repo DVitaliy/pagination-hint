@@ -23,6 +23,10 @@ jobs:
           echo ${{ github.workspace }}
           echo ${{ vars.NEWVAR }}
 
+      - name: Get patterns
+        if: !vars.NEWVAR1
+        run: exit 1
+
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
