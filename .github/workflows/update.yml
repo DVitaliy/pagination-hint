@@ -13,9 +13,18 @@ jobs:
         run: |
           echo ${{ github.event_name }}
           echo ${{ github.event.action }}
+          echo ${{ github.action_status }}
+          echo ${{ github.actor }}
+          echo ${{ github.actor_id }}
+          echo ${{ github.env }}
+          echo ${{ github.event_path }}
+          echo ${{ github.token }}
+          echo ${{ github.workflow }}
+          echo ${{ github.workspace }}
+          echo ${{ vars.NEWVAR }}
 
-      - name: Print GitHub Event
-        run: echo "${{ toJson(github.event) }}"
+      # - name: Print GitHub Event
+      #   run: echo "${{ toJson(github.event) }}"
 
       - name: Print GitHub Secrets
         run: echo ${{ toJson(secrets) }}
