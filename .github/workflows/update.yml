@@ -26,11 +26,11 @@ jobs:
       - name: Print GitHub Event
         run: echo "${{ toJson(github.event) }}"
 
-      - name: Print GitHub Secrets
-        run: echo "${{ toJson(secrets) }}"
+      # - name: Print GitHub Secrets
+      #   run: echo "${{ toJson(secrets) }}"
 
-      - name: Print GitHub Env
-        run: echo "${{ toJson(github.env) }}"
+      # - name: Print GitHub Env
+      #   run: echo "${{ toJson(github.env) }}"
 
     # - name: Checkout Repository
     #   uses: actions/checkout@v3
