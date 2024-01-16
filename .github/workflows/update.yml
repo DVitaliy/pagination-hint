@@ -34,7 +34,6 @@ jobs:
         with:
           script: |
             console.log("${{ vars.NEWVAR }}")
-            console.log(JSON.parse(${{ vars }}))
             core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
             console.log(context)
             core.exportVariable('envVar', 'Val1111')
