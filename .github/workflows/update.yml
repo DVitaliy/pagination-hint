@@ -34,6 +34,8 @@ jobs:
         with:
           script: |
             console.log(github)
+            console.log(context)
+            core.debug('Inside try block');
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
