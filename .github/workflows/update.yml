@@ -35,7 +35,7 @@ jobs:
           script: |
             console.log(github)
             console.log(context)
-            core.debug('Inside try block');
+            core.exportVariable('envVar', 'Val1111')
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -54,3 +54,6 @@ jobs:
 
       - name: Print GitHub Secrets
         run: echo `${{ toJson(secrets) }}`
+
+      - name: Print ${{env.envVar}}
+        run: echo `${{ env.envVar }}`
