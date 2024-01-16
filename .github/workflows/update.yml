@@ -28,6 +28,11 @@ jobs:
         run: |
           echo `${{ toJson(github.event.issue.labels) }}`
 
+      - name: View context attributes
+        uses: actions/github-script@v7
+        with:
+          script: console.log(context)
+
       - uses: pnpm/action-setup@v2
         name: Install pnpm
         with:
@@ -38,7 +43,7 @@ jobs:
         run: node -v
 
       - name: Print GitHub Event
-        run: echo "${{ toJson(github.event) }}"
+        run: echo `${{ toJson(github.event) }}`
 
-      # - name: Print GitHub Secrets
-      #   run: echo ${{ toJson(secrets) }}
+      - name: Print GitHub Secrets
+        run: echo `${{ toJson(secrets) }}`
