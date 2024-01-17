@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Defining the library to update
+      - name: Defining the dependency to update
         uses: actions/github-script@v7
         with:
           script: |
@@ -43,12 +43,21 @@ jobs:
         if: ${{ env.LIB_TO_UP }}
         uses: actions/checkout@v4
 
+      - name: Restore cache node_modules
+        id: restore-cache
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install pnpm
-        if: ${{ env.LIB_TO_UP }}
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         uses: pnpm/action-setup@v2
         with:
           version: 8
-          run_install: false
+          run_install: |
+            - recursive: true
+              args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
