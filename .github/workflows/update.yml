@@ -97,8 +97,9 @@ jobs:
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
         run: |
+          branch_name="bumps-${{ env.LIB_TO_UP }}-${{ env.LIB_V_FROM }}..${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            echo "Ни один паттерн не был найден в заголовке."
+            echo "Ни один паттерн не был найден в заголовке. $branch_name"
           fi
 
       # - name: Create PR for `issue`
