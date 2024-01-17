@@ -61,4 +61,7 @@ jobs:
 
       - name: Output prev step
         if: ${{ env.UPDATE_RESULT }}
-        run: echo ${{ env.UPDATE_RESULT }}
+        uses: actions/github-script@v7
+        with:
+          script: |
+            console.log("${{ env.UPDATE_RESULT }}")
