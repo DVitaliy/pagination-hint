@@ -2,53 +2,40 @@ name: Update Dependencies and Create PR
 
 on:
   issues:
-    types: [opened, labeled, edited]
+    types: [opened, edited]
+  pull_request:
+    types: [labeled]
 
 jobs:
   update-and-create-pr:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: Test
-        run: |
-          echo ${{ github.event_name }}
-          echo ${{ github.event.action }}
-          echo ${{ github.action_status }}
-          echo ${{ github.actor }}
-          echo ${{ github.actor_id }}
-          echo ${{ github.env }}
-          echo ${{ github.event_path }}
-          echo ${{ github.token }}
-          echo ${{ github.workflow }}
-          echo ${{ github.workspace }}
-          echo ${{ vars.NEWVAR }}
-
-      # - name: Get patterns
-      #   if: ${{ vars.NEWVAR }}
-      #   run: |
-      #     echo `${{ toJson(github.event.issue.labels) }}`
 
       - name: Defining the library to update
         uses: actions/github-script@v7
         with:
           script: |
             console.log(context)
+            console.log(context.payload.issue.user)
+            const bumpReg = /^bump\s([^\s]+)/i
+            let matchString = ""
             switch (context.payload.action) {
               case "edited":
               case "opened": {
-                const match = context.payload.issue.title.match(/^bump\s([^\s]+)/i)
-                if (match) {
-                  core.exportVariable('LIB_TO_UP', match[1])
-                }
+                matchString = context.payload.issue.title
                 break
               }
               case "labeled": {
-                console.log("labeled")
-                core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
+                matchString = context.payload.label.description
                 break
               }
               default: {
                 break
+              }
+            }
+            if (matchString) {
+              const match = matchString.match(bumpReg)
+              if (match) {
+                core.exportVariable('LIB_TO_UP', match[1])
               }
             }
 
@@ -59,15 +46,10 @@ jobs:
           version: 8
           run_install: false
 
-      # - name: Print GitHub
-      #   run: echo `${{ toJson(github) }}`
-
-      # - name: Print GitHub Event
-      #   run: echo `${{ toJson(github.event) }}`
-
-      # - name: Print GitHub Secrets
-      #   run: echo `${{ toJson(secrets) }}`
-
       - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
+        id: bump_library
         run: pnpm up ${{ env.LIB_TO_UP }}
+      
+      - name: Output prev step
+        run: echo ${{steps.bump_library.outputs}}
