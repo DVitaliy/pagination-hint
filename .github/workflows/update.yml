@@ -62,10 +62,13 @@ jobs:
 
       - name: Save cache
         if: hashFiles('node_modules')
-        uses: actions/cache/save@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+        run: |
+          echo ${{hashFiles('node_modules')}}
+          echo ${{hashFiles('src')}}
+        # uses: actions/cache/save@v3
+        # with:
+        #   path: node_modules
+        #   key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Bump ${{env.LIB_TO_UP}}
         if: env.LIB_TO_UP
