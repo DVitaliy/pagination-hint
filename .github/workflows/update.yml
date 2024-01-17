@@ -103,6 +103,13 @@ jobs:
             console.log("matchCurrentVersion"+ matchCurrentVersion)
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
+      - name: Set up Git
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          echo -n "machine github.com login ${{ secrets.GITHUB_ACTOR }} password ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
+          chmod 600 ~/.netrc
+
       - name: Commit and Push Changes
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
@@ -111,8 +118,7 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            git config user.name github-actions
-            git config user.email github-actions@github.com
+            git remote add origin 
             git status
             git checkout -b "$branch_name"
             git branch
