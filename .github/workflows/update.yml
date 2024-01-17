@@ -37,6 +37,21 @@ jobs:
             core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
             console.log(context)
             core.exportVariable('envVar', 'Val1111')
+            switch (context.payload.action) {
+              case "edited":
+              case "opened": {
+                console.log("---",context.payload.action)
+                break
+              }
+              case "labeled": {
+                console.log("labeled")
+                break
+              }
+              default: {
+                console.warn("switch default")
+                break
+              }
+            }
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
