@@ -38,7 +38,6 @@ jobs:
             console.log(context)
             core.exportVariable('envVar', 'Val1111')
             const patternsReg = new RegExp("@\\b(${{ vars.BUMP_PATTERNS }})\\b", "ig")
-            const 
             switch (context.payload.action) {
               case "edited":
               case "opened": {
