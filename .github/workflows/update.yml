@@ -82,13 +82,13 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const matchCurrentVersion = (`${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.LIB_TO_UP }} ([\S]+)/m) ?? []).[1]
-            const matchUpdateVersion = (`${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.LIB_TO_UP }} ([\S]+)/m) ?? []).[1]
+            const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.LIB_TO_UP }} ([\S]+)/m)
+            const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.LIB_TO_UP }} ([\S]+)/m)
             console.log("matchCurrentVersion"+ matchCurrentVersion)
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
   create-pull-request:
-    name: Create PullRequest for issue
+    name: Create Pull request for issue
     if: github.event_name == 'issue'
     runs-on: ubuntu-latest
     needs: defining-and-update-dependency
@@ -99,7 +99,7 @@ jobs:
         run: echo "$OUTPUT1 $OUTPUT2"
 
   push-commit-to-exist-branch:
-    name: push commit to exist branch for PR
+    name: Push commit to exist branch for pull_request
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     needs: defining-and-update-dependency
