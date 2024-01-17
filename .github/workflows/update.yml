@@ -52,7 +52,7 @@ jobs:
 
       - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
-        run: echo "UPDATE_RESULT=$(pnpm up ${{ env.LIB_TO_UP }})" >> $GITHUB_ENV
+        run: echo "UPDATE_RESULT=`pnpm up ${{ env.LIB_TO_UP }}`" >> $GITHUB_ENV
 
       - name: Output prev step
         if: ${{ env.UPDATE_RESULT }}
