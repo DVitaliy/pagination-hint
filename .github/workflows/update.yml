@@ -52,14 +52,12 @@ jobs:
               }
             }
 
-      # - uses: pnpm/action-setup@v2
-      #   name: Install pnpm
-      #   with:
-      #     version: 8
-      #     run_install: false
-
-      - name: Print Node v
-        run: node -v
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        if: ${{ env.LIB_TO_UP }}
+        with:
+          version: 8
+          run_install: false
 
       # - name: Print GitHub
       #   run: echo `${{ toJson(github) }}`
@@ -70,6 +68,6 @@ jobs:
       # - name: Print GitHub Secrets
       #   run: echo `${{ toJson(secrets) }}`
 
-      - name: Print ${{env.LIB_TO_UP}}
+      - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
-        run: echo `${{ env.LIB_TO_UP }}`
+        run: pnpm up ${{ env.LIB_TO_UP }}
