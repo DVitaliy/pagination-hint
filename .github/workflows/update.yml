@@ -97,8 +97,8 @@ jobs:
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
         run: |
-          branch_name="bump-branch"
           if [ "${{ github.event_name }}" == "issues" ]; then
+            branch_name="bump-branch"
             git config --global user.name ${{ github.sender.login }}
             git checkout -b ${{branch_name}}
             git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
