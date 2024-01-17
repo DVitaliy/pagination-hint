@@ -40,10 +40,13 @@ jobs:
                 core.exportVariable('LIB_TO_UP', match[1])
               }
             }
-      - name: Checkout & Install pnpm
+      - name: Checkout
         if: env.LIB_TO_UP
         uses: actions/checkout@v4
+
+      - name: Install pnpm
         uses: pnpm/action-setup@v2
+        if: env.LIB_TO_UP
         with:
           version: 8
           run_install: false
