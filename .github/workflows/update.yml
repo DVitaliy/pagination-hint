@@ -50,9 +50,9 @@ jobs:
       - name: Checkout
         if: env.DEPENDENCY_NAME
         uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
+
+      - name: Display git config
+        run: cat .git/config
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -103,12 +103,12 @@ jobs:
             console.log("matchCurrentVersion"+ matchCurrentVersion)
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
-      - name: Set up Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-          git config --global credential.helper "store --file=$HOME/.git-credentials"
-          echo "https://github.com:${{ secrets.GITHUB_TOKEN }}" > $HOME/.git-credentials
+      # - name: Set up Git
+      #   run: |
+      #     git config --global user.email "actions@github.com"
+      #     git config --global user.name "GitHub Actions"
+      #     git config --global credential.helper "store --file=$HOME/.git-credentials"
+      #     echo "https://github.com:${{ secrets.GITHUB_TOKEN }}" > $HOME/.git-credentials
 
       - name: Commit and Push Changes
         if: env.LIB_V_FROM && env.LIB_V_TO
@@ -118,6 +118,8 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
+            git config --global user.email "actions@github.com"
+            git config --global user.name "GitHub Actions"
             git status
             git checkout -b "$branch_name"
             git branch
