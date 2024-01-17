@@ -107,8 +107,8 @@ jobs:
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          echo -n "machine github.com login ${{ secrets.GITHUB_ACTOR }} password ${{ secrets.GITHUB_TOKEN }}" > ~/.netrc
-          chmod 600 ~/.netrc
+          git config --global credential.helper "store --file=$HOME/.git-credentials"
+          echo "https://github.com:${{ secrets.GITHUB_TOKEN }}" > $HOME/.git-credentials
 
       - name: Commit and Push Changes
         if: env.LIB_V_FROM && env.LIB_V_TO
