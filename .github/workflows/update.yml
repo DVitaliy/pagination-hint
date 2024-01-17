@@ -23,24 +23,27 @@ jobs:
           echo ${{ github.workspace }}
           echo ${{ vars.NEWVAR }}
 
-      - name: Get patterns
-        if: ${{ vars.NEWVAR }}
-        run: |
-          echo `${{ toJson(github.event.issue.labels) }}`
+      # - name: Get patterns
+      #   if: ${{ vars.NEWVAR }}
+      #   run: |
+      #     echo `${{ toJson(github.event.issue.labels) }}`
 
-      - name: View context attributes
+      - name: Defining the library to update
         uses: actions/github-script@v7
-        if: ${{ vars.NEWVAR }}
+        if: ${{ vars.BUMP_PATTERNS }}
         with:
           script: |
-            console.log("${{ vars.NEWVAR }}")
+            console.log("${{ vars.BUMP_PATTERNS }}")
             core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
             console.log(context)
             core.exportVariable('envVar', 'Val1111')
+            const patternsReg = new RegExp("@\\b(${{ vars.BUMP_PATTERNS }})\\b", "ig")
+            const 
             switch (context.payload.action) {
               case "edited":
               case "opened": {
-                console.log("---",context.payload.action)
+                const match = context.payload.issue.title.match(patternsReg)
+                console.log("---match", match)
                 break
               }
               case "labeled": {
@@ -48,28 +51,27 @@ jobs:
                 break
               }
               default: {
-                console.warn("switch default")
                 break
               }
             }
 
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
+      # - uses: pnpm/action-setup@v2
+      #   name: Install pnpm
+      #   with:
+      #     version: 8
+      #     run_install: false
 
       - name: Print Node v
         run: node -v
 
-      - name: Print GitHub
-        run: echo `${{ toJson(github) }}`
+      # - name: Print GitHub
+      #   run: echo `${{ toJson(github) }}`
 
-      - name: Print GitHub Event
-        run: echo `${{ toJson(github.event) }}`
+      # - name: Print GitHub Event
+      #   run: echo `${{ toJson(github.event) }}`
 
-      - name: Print GitHub Secrets
-        run: echo `${{ toJson(secrets) }}`
+      # - name: Print GitHub Secrets
+      #   run: echo `${{ toJson(secrets) }}`
 
       - name: Print ${{env.envVar}}
         run: echo `${{ env.envVar }}`
