@@ -97,7 +97,7 @@ jobs:
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
         run: |
-          branchname="bumps-${{ env.LIB_TO_UP }}-${{ env.LIB_V_FROM }}..${{ env.LIB_V_TO }}"
+          branchname=bumps-${{ env.LIB_TO_UP }}-${{ env.LIB_V_FROM }}..${{ env.LIB_V_TO }}
           if [ "${{ github.event_name }}" == "issues" ]; then
             git config --global user.name ${{ github.sender.login }}
             git checkout -b ${{branchname}}
