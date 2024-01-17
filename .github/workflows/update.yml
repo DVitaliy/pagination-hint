@@ -30,23 +30,21 @@ jobs:
 
       - name: Defining the library to update
         uses: actions/github-script@v7
-        if: ${{ vars.BUMP_PATTERNS }}
         with:
           script: |
-            console.log("${{ vars.BUMP_PATTERNS }}")
-            core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
             console.log(context)
-            core.exportVariable('envVar', 'Val1111')
-            const patternsReg = new RegExp("@\\b(${{ vars.BUMP_PATTERNS }})\\b", "ig")
             switch (context.payload.action) {
               case "edited":
               case "opened": {
-                const match = context.payload.issue.title.match(patternsReg)
-                console.log("---match", match)
+                const match = context.payload.issue.title.match(/^bump\s([^\s]+)/i)
+                if (match) {
+                  core.exportVariable('LIB_TO_UP', match[1])
+                }
                 break
               }
               case "labeled": {
                 console.log("labeled")
+                core.info('\u001b[31;46mRed foreground with a cyan background and \u001b[1mbold text at the end')
                 break
               }
               default: {
@@ -72,5 +70,6 @@ jobs:
       # - name: Print GitHub Secrets
       #   run: echo `${{ toJson(secrets) }}`
 
-      - name: Print ${{env.envVar}}
-        run: echo `${{ env.envVar }}`
+      - name: Print ${{env.LIB_TO_UP}}
+        if: ${{ env.LIB_TO_UP }}
+        run: echo `${{ env.LIB_TO_UP }}`
