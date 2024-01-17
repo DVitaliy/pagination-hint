@@ -90,15 +90,15 @@ jobs:
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
   create-pull-request:
-    name: Create Pull request for issue ${{github.event_name}}
-    # if: github.event_name == 'issue'
+    name: Create PR for `issue`
+    if: github.event_name == 'issue'
     runs-on: ubuntu-latest
     needs: defining-and-update-dependency
     steps:
       - name: test
         run: |
-          echo ${{ toJson(github) }}
-          echo ${{ toJson(github.env) }}
+          echo `${{ toJson(github) }}`
+          echo `${{ toJson(env) }}`
 
   push-commit-to-exist-branch:
     name: Push commit to exist branch for pull_request
