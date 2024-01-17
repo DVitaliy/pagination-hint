@@ -60,6 +60,13 @@ jobs:
             - recursive: true
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
+      - name: Save cache
+        if: hashFiles('node_modules')
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Bump ${{env.LIB_TO_UP}}
         if: env.LIB_TO_UP
         run: |
@@ -74,4 +81,5 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            console.log(`${{ env.UPDATE_RESULT }}`)
+            const matchUpVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.LIB_TO_UP }} ([\S]+)/gm)
+            console.log(matchUpVersion)
