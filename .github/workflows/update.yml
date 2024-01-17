@@ -14,6 +14,28 @@ jobs:
           script: |
             console.log(context)
             console.log(context.payload.issue.user)
+            const bumpReg = /^bump\s([^\s]+)/i
+            let matchString = ""
+            switch (context.payload.action) {
+              case "edited":
+              case "opened": {
+                matchString = context.payload.issue.title
+                break
+              }
+              case "labeled": {
+                matchString = context.payload.label.description
+                break
+              }
+              default: {
+                break
+              }
+            }
+            if (matchString) {
+              const match = matchString.match(bumpReg)
+              if (match) {
+                core.exportVariable('LIB_TO_UP', match[1])
+              }
+            }
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -24,7 +46,6 @@ jobs:
 
       - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
-        id: bump_library
         run: pnpm up ${{ env.LIB_TO_UP }}
       
       # - name: Output prev step
