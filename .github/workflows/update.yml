@@ -112,6 +112,8 @@ jobs:
             git status
             git checkout -b "$branch_name"
             git branch
+            git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
+            git push origin "$branch_name"
           fi
 
       # - name: Create PR for `issue`
