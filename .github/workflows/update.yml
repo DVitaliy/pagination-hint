@@ -52,9 +52,8 @@ jobs:
 
       - name: Bump ${{env.LIB_TO_UP}}
         if: ${{ env.LIB_TO_UP }}
-        id: bump_library
-        run: pnpm up ${{ env.LIB_TO_UP }}
+        run: echo "UPDATE_RESULT=$(pnpm up ${{ env.LIB_TO_UP }})" >> $GITHUB_ENV
 
       - name: Output prev step
-        if: ${{ steps.bump_library }}
-        run: echo ${{ toJson(steps) }}
+        if: ${{ env.UPDATE_RESULT }}
+        run: echo ${{ env.UPDATE_RESULT }}
