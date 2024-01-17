@@ -111,7 +111,7 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            if [ git ls-remote --heads origin | grep -q "$branch_name" ]; then
+            if git ls-remote --heads origin refs/heads/"$branch_name"; then
               echo "The $branch_name branch already exists in the remote repository."
             else
               git config --global user.email "${{ github.actor }}@users.noreply.github.com"
