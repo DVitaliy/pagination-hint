@@ -56,9 +56,12 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install dependencies & Save cache node_modules
+      - name: Install dependencies
         if: steps.restore-cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
+
+      - name: Save cache node_modules
+        if: steps.restore-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v3
         with:
           path: node_modules
