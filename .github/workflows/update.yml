@@ -97,12 +97,8 @@ jobs:
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" == "issues" ]; then
-            branch_name="bump-branch"
-            git config --global user.name ${{ github.sender.login }}
-            git checkout -b ${{branch_name}}
-            git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
-            git push origin "$branch_name" $branch_name
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            echo "Ни один паттерн не был найден в заголовке."
           fi
 
       # - name: Create PR for `issue`
