@@ -40,11 +40,11 @@ jobs:
               }
             }
       - name: Checkout
-        if: ${{ env.LIB_TO_UP }}
+        if: env.LIB_TO_UP
         uses: actions/checkout@v4
 
       - name: Restore cache node_modules
-        if: ${{ env.LIB_TO_UP }}
+        if: env.LIB_TO_UP
         id: restore-cache
         uses: actions/cache/restore@v3
         with:
@@ -61,7 +61,7 @@ jobs:
               args: [--frozen-lockfile, --strict-peer-dependencies]
 
       - name: Bump ${{env.LIB_TO_UP}}
-        if: ${{ env.LIB_TO_UP }}
+        if: env.LIB_TO_UP
         run: |
           {
             echo 'UPDATE_RESULT<<EOF'
@@ -75,3 +75,5 @@ jobs:
         with:
           script: |
             console.log("${{ env.UPDATE_RESULT }}")
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
