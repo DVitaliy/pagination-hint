@@ -97,30 +97,41 @@ jobs:
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
+              const BRANCH_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
+
                 core.exportVariable('LIB_V_FROM', matchCurrentVersion[1])
                 core.exportVariable('LIB_V_TO', matchUpdateVersion[1])
+
+                try {
+                  const branchInfo = await github.rest.repos.getBranch({
+                    repo: context.repo.owner,
+                    branch: BRANCH_NAME,
+                    owner: context.repo.repo
+                  })
+                  console.log(`Found branch ${branchInfo}`)
+                } catch (e) {
+                  if (e.message === 'Branch not found') {
+                  }
+                  console.log(`error`, e)
+                }
             }
             console.log("matchCurrentVersion"+ matchCurrentVersion)
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
       - name: Commit and Push Changes
-        if: env.LIB_V_FROM && env.LIB_V_TO
+        if: env.BRANCH_NAME
         shell: bash
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            if git ls-remote --heads origin refs/heads/"$branch_name"; then
-              echo "The $branch_name branch already exists in the remote repository."
-            else
-              git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-              git config --global user.name "${{ github.actor }}"
-              git pull origin "$branch_name"
-              git checkout -b "$branch_name"
-              git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
-              git push origin "$branch_name"
-            fi
+            git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+            git config --global user.name "${{ github.actor }}"
+            git pull origin "$branch_name"
+            git checkout -b "$branch_name"
+            git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
+            git push origin "$branch_name"
           fi
 
       # - name: Create PR for `issue`
