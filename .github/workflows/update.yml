@@ -49,5 +49,5 @@ jobs:
         id: bump_library
         run: pnpm up ${{ env.LIB_TO_UP }}
       
-      - name: Output prev step
-        run: echo ${{steps.bump_library.outputs}}
+      # - name: Output prev step
+      #   run: echo ${{steps.bump_library.outputs}}
