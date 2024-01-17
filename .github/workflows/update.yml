@@ -118,7 +118,6 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            git remote add origin 
             git status
             git checkout -b "$branch_name"
             git branch
