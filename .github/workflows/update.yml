@@ -106,8 +106,8 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}..${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            git config --global user.name ${{ github.sender.login }}
-            git checkout -b $branch_name
+            git config --global user.name "${{ github.sender.login }}"
+            git checkout -b "$branch_name"
           fi
 
       # - name: Create PR for `issue`
