@@ -53,4 +53,5 @@ jobs:
         run: pnpm up ${{ env.LIB_TO_UP }}
 
       - name: Output prev step
-        run: echo ${{steps.bump_library.outputs}}
+        if: ${{ steps.bump_library }}
+        run: echo ${{ toJson(steps) }}
