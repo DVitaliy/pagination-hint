@@ -96,12 +96,12 @@ jobs:
       - name: Commit and Push Changes
         if: env.LIB_V_FROM && env.LIB_V_TO
         run: |
-          branch_name = "bump-${{ env.LIB_TO_UP }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
+          branch_name = "bumps-${{ env.LIB_TO_UP }}-${{ env.LIB_V_FROM }}..${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" == "issues" ]; then
             git config --global user.name ${{ github.sender.login }}
-            git checkout -b "$patterns"
+            git checkout -b "$branch_name"
             git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
-            git push origin "$patterns"
+            git push origin "$branch_name"
           fi
 
       # - name: Create PR for `issue`
