@@ -103,13 +103,6 @@ jobs:
             console.log("matchCurrentVersion"+ matchCurrentVersion)
             console.log("matchUpdateVersion"+ matchUpdateVersion)
 
-      # - name: Set up Git
-      #   run: |
-      #     git config --global user.email "actions@github.com"
-      #     git config --global user.name "GitHub Actions"
-      #     git config --global credential.helper "store --file=$HOME/.git-credentials"
-      #     echo "https://github.com:${{ secrets.GITHUB_TOKEN }}" > $HOME/.git-credentials
-
       - name: Commit and Push Changes
         if: env.LIB_V_FROM && env.LIB_V_TO
         shell: bash
@@ -118,7 +111,7 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            if git ls-remote origin refs/heads/"$branch_name" | grep -q "$branch_name"; then
+            if [ git ls-remote --heads origin | grep -q "$branch_name" ]; then
               echo "The $branch_name branch already exists in the remote repository."
             else
               git config --global user.email "${{ github.actor }}@users.noreply.github.com"
