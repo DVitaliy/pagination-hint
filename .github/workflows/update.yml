@@ -109,11 +109,7 @@ jobs:
         run: |
           branch_name="bumps-${{ env.DEPENDENCY_NAME }}-${{ env.LIB_V_FROM }}-${{ env.LIB_V_TO }}"
           if [ "${{ github.event_name }}" = "issues" ]; then
-            git config --global user.name "github-actions[bot]"
-            git config --global user.email "github-actions[bot]@users.noreply.github.com"
-            git checkout -b "$branch_name"
-            git commit -am "Updated ${{ env.LIB_TO_UP }} dependency"
-            git push origin "$branch_name"
+            git status
           fi
 
       # - name: Create PR for `issue`
