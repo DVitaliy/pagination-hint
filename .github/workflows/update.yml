@@ -40,9 +40,13 @@ jobs:
                 core.exportVariable('LIB_TO_UP', match[1])
               }
             }
-      - name: Checkout
+      - name: Checkout & Install pnpm
         if: env.LIB_TO_UP
         uses: actions/checkout@v4
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
 
       - name: Restore cache node_modules
         if: env.LIB_TO_UP
@@ -52,17 +56,9 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      - name: Install pnpm
-        if: env.LIB_TO_UP && steps.restore-cache.outputs.cache-hit != 'true'
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: |
-            - recursive: true
-              args: [--frozen-lockfile, --strict-peer-dependencies]
-
-      - name: Save cache node_modules
-        if: hashFiles('node_modules')
+      - name: Install dependencies & Save cache node_modules
+        if: steps.restore-cache.outputs.cache-hit != 'true'
+        run: pnpm install --frozen-lockfile
         uses: actions/cache/save@v3
         with:
           path: node_modules
