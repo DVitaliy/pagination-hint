@@ -129,6 +129,7 @@ jobs:
           git status
           git show --summary
       - name: git branch -a
+        id: test-output
         run: git branch -a
 
       - name: git log -1 --stat
@@ -145,12 +146,18 @@ jobs:
           git branch
           git log -1 --stat
           git log -2 --stat
+      - name: git3
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git commit -am "Updated11 ${{env.DEPENDENCY_NAME}}"
+          git push origin ${{ github.head_ref }}
 
       - name: test
         run: |
-          echo `${{ toJson(github) }}`
-          echo `${{ toJson(vars) }}`
           echo `${{ toJson(steps) }}`
+          echo `${{ toJson(vars) }}`
+          echo `${{ toJson(github) }}`
 
       # - name: Push Commit for exists branch NOT IMPLEMENTED YET
       #   if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
