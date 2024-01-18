@@ -32,8 +32,10 @@ jobs:
                 break
               }
             }
+            console.log("matchString: " + matchString)
             if (matchString) {
               const match = matchString.match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i"))
+              console.log(match)
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
                 core.info(`The dependency name - matched: ${match[1]}`)
