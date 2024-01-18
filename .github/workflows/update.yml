@@ -1,4 +1,4 @@
-name: Update Dependencies and Create PR
+name: Update Dependency and Create PR
 
 on:
   issues:
@@ -7,9 +7,11 @@ on:
     types: [labeled]
 
 jobs:
-  job1:
+  defining-dependency:
     name: Defining the dependency to update
     runs-on: ubuntu-latest
+    outputs:
+      DEPENDENCY_NAME: ${{ steps.defining-dependency.outputs.DEPENDENCY_NAME }}
 
     steps:
       - name: Defining the dependency to update
@@ -42,17 +44,17 @@ jobs:
                 core.setOutput('DEPENDENCY_NAME', match[1])
               }
             }
-
-      - name: test steps
-        run: |
-          echo `${{ toJson(steps) }}`
+  update-dependency:
+    name: Update Dependency
+    runs-on: ubuntu-latest
+    needs: defining-dependency
+    steps:
+      - env:
+          DEPENDENCY_NAME: ${{needs.defining-dependency.outputs.DEPENDENCY_NAME}}
 
       - name: Checkout
         if: env.DEPENDENCY_NAME
         uses: actions/checkout@v4
-
-      - name: Display git config
-        run: cat .git/config
 
       - name: Install pnpm
         uses: pnpm/action-setup@v2
@@ -105,7 +107,7 @@ jobs:
                 try {
                   const branchInfo = await github.rest.repos.getBranch({
                     repo: context.repo.owner,
-                    branch: BRANCH_NAME,
+                    branch: BRANCH_NAME.replace(/\s+/g, '-'),
                     owner: context.repo.repo
                   })
                   console.log(`Found branch ${branchInfo}`)
