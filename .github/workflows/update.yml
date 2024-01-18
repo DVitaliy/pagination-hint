@@ -87,56 +87,62 @@ jobs:
         id: parse-result
         uses: actions/github-script@v7
         with:
-          result-encoding: json
           script: |
             let _Output = ""
             try {
-              const options = {
+              await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], {
                 listeners: {
                   stdout: (data) => _Output += data.toString()
                 }
-              }
-              await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], options)
+              })
             } catch (e) {
               core.error(`pnpm up error ${e}`)
             }
-            return {"qwe":123}
-            const matchCurrentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
-            const matchUpdateVersion = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
-            if (matchCurrentVersion && matchUpdateVersion) {
-              core.setOutput('DEPENDENCY_CURRENT_VERSION', matchCurrentVersion[1])
-              core.setOutput('DEPENDENCY_UPDATE_VERSION', matchUpdateVersion[1])
-              const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
-              const {owner, repo} = context.repo
-              const branchName = BUMP_FULL_NAME.replace(/\s+/g, '-')
-              core.setOutput('BRANCH_NAME', branchName)
-              try {
-                const { data: branches } = await github.rest.repos.listBranches({
-                  owner,
-                  repo,
-                })
-                const branchExists = branches.some(branch => branch.name === branchName);
-                if (branchExists) {
-                  core.info(`The branch "${branchName}" exists`)
-                } else {
-                  core.info(`The branch "${branchName}" doest not exist`)
-                  core.exportVariable('BRANCH_DOEST_NOT_EXIST', BUMP_FULL_NAME)
-                }
-              } catch (e) {
-                console.log(`error`, e)
+            if (!_Output) return
+
+            const currentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+            const updateVersion  = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+            if (currentVersion && updateVersion) {
+              const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${currentVersion[1]} to ${updateVersion[1]}`
+
+              core.setOutput('DEPENDENCY_CURRENT_VERSION', currentVersion[1])
+              core.setOutput('DEPENDENCY_UPDATE_VERSION', updateVersion[1])
+              core.setOutput('BUMP_FULL_NAME', BUMP_FULL_NAME)
+              core.exportVariable('BRANCH_NAME', BUMP_FULL_NAME.replace(/\s+/g, '-'))
+            }
+
+      - name: Check exists branch ${{env.BRANCH_NAME}}
+        if: env.BRANCH_NAME && github.event_name == 'issues'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const {owner, repo} = context.repo
+            try {
+              const { data: branches } = await github.rest.repos.listBranches({
+                owner,
+                repo
+              })
+              const branchExists = branches.some(branch => branch.name === ${{ env.BRANCH_NAME }});
+              if (branchExists) {
+                core.info(`The branch "${{ env.BRANCH_NAME }}" exists`)
+              } else {
+                core.info(`The branch "${{ env.BRANCH_NAME }}" doest not exist`)
+                core.exportVariable('BRANCH_DOEST_NOT_EXIST', true)
               }
+            } catch (e) {
+              core.error(`listBranches error ${e}`)
             }
 
       - name: Create PR for `issue`
         if: env.BRANCH_DOEST_NOT_EXIST && github.event_name == 'issues'
         uses: peter-evans/create-pull-request@v5
         with:
-          commit-message: Updated ${{env.DEPENDENCY_NAME}}
-          branch: ${{ steps.parse-result.outputs.BRANCH_NAME }}
+          commit-message: Updated ${{ env.DEPENDENCY_NAME }}
+          branch: ${{ env.BRANCH_NAME }}
           delete-branch: true
-          title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
+          title: ${{ steps.parse-result.outputs.BUMP_FULL_NAME }}
           body: |
-            Update report
+            Update ${{ env.DEPENDENCY_NAME }}
 
       # - name: git status
       #   run: |
