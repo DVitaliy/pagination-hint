@@ -15,11 +15,8 @@ jobs:
     steps:
       - name: Defining the dependency to update
         uses: actions/github-script@v7
-        id: defining-dependency
         with:
           script: |
-            console.log("not match".match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i")))
-            console.log("bump not match".match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i")))
             let matchString = ""
             switch (context.payload.action) {
               case "edited":
@@ -39,7 +36,7 @@ jobs:
               const match = matchString.match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i"))
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
-                core.setOutput('DEPENDENCY_NAME', match[1])
+                console.log(`The dependency name - matched: ${match[1]}`)
               }
             }
 
@@ -123,7 +120,7 @@ jobs:
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
 
       - name: Push Commit for exists branch
-        if: github.event_name == 'pull_request'
+        if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
         run: |
           echo `${{ toJson(github) }}`
           echo `${{ toJson(vars) }}`
