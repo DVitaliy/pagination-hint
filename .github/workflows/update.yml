@@ -96,7 +96,7 @@ jobs:
               const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
               const branchName = BUMP_FULL_NAME.replace(/\s+/g, '-')
               try {
-                const { data: branches } = await github.repos.listBranches({
+                const { data: branches } = await github.rest.repos.listBranches({
                   owner,
                   repo,
                 })
