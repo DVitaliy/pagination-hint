@@ -124,14 +124,11 @@ jobs:
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
 
       - name: git status
-        run: git status
+        run: |
+          git status
+          git show --summary
       - name: git branch -a
         run: git branch -a
-      - name: git switch
-        run: |
-          git switch -c ${{ steps.parse-result.outputs.BRANCH_NAME }} origin/${{ steps.parse-result.outputs.BRANCH_NAME }}
-          git status
-          git branch
 
         # run: |
         #   echo `${{ toJson(github) }}`
