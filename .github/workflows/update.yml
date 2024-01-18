@@ -144,7 +144,7 @@ jobs:
           git checkout ${{ github.head_ref }}
           git commit -am "Updated ${{ env.DEPENDENCY_NAME }} to ${{ steps.parse-result.outputs.DEPENDENCY_UPDATE_VERSION }}"
           git pull origin ${{ github.head_ref }}
-          git push origin HEAD:${{ github.head_ref }}
+          git push origin ${{ github.head_ref }}
 
       - name: test
         run: |
