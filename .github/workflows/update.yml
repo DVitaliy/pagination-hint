@@ -129,5 +129,10 @@ jobs:
           git status
           git branch
           git ls-remote --heads origin
+          git commit -am "Updated ${{env.DEPENDENCY_NAME}}"
+
+      - name: test
+        run: |
           echo `${{ toJson(github) }}`
           echo `${{ toJson(vars) }}`
+          echo `${{ toJson(steps) }}`
