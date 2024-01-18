@@ -123,6 +123,12 @@ jobs:
           delete-branch: true
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
 
+      - name: test
+        run: |
+          echo `${{ toJson(github) }}`
+          echo `${{ toJson(vars) }}`
+          echo `${{ toJson(steps) }}`
+
       - name: Push Commit for exists branch NOT IMPLEMENTED YET
         if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
         run: |
@@ -132,10 +138,4 @@ jobs:
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
           git config --global user.name "${{ github.actor }}"
           git commit -am "Updated ${{env.DEPENDENCY_NAME}}"
-          git push origin HEAD:${{ steps.parse-result.outputs.BRANCH_NAME }}
-
-      - name: test
-        run: |
-          echo `${{ toJson(github) }}`
-          echo `${{ toJson(vars) }}`
-          echo `${{ toJson(steps) }}`
+          git push origin HEAD:refs/heads/${{ github.head_ref }}
