@@ -32,13 +32,14 @@ jobs:
                 break
               }
             }
-            console.log("matchString: " + matchString)
+            core.info(`Match String: "${matchString}"`)
             if (matchString) {
               const match = matchString.match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i"))
-              console.log(match)
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
-                core.info(`The dependency name - matched: ${match[1]}`)
+                core.info(`The dependency name - matched: "${match[1]}"`)
+              } else {
+                core.info(`The dependency name not matched`)
               }
             }
 
@@ -90,9 +91,12 @@ jobs:
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
+              core.setOutput('DEPENDENCY_CURRENT_VERSION', matchCurrentVersion[1])
+              core.setOutput('DEPENDENCY_UPDATE_VERSION', matchUpdateVersion[1])
               const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
               const {owner, repo} = context.repo
               const branchName = BUMP_FULL_NAME.replace(/\s+/g, '-')
+              core.setOutput('BRANCH_NAME', branchName)
               try {
                 const { data: branches } = await github.rest.repos.listBranches({
                   owner,
@@ -100,11 +104,10 @@ jobs:
                 })
                 const branchExists = branches.some(branch => branch.name === branchName);
                 if (branchExists) {
-                  core.info(`The branch ${branchName} exists`)
+                  core.info(`The branch "${branchName}" exists`)
                 } else {
-                  core.info(`The branch ${branchName} doest not exist`)
+                  core.info(`The branch "${branchName}" doest not exist`)
                   core.exportVariable('BRANCH_DOEST_NOT_EXIST', BUMP_FULL_NAME)
-                  core.setOutput('BRANCH_NAME', branchName)
                 }
               } catch (e) {
                 console.log(`error`, e)
@@ -120,8 +123,11 @@ jobs:
           delete-branch: true
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
 
-      - name: Push Commit for exists branch
+      - name: Push Commit for exists branch NOT IMPLEMENTED YET
         if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
         run: |
+          git status
+          git branch
+          git ls-remote --heads origin
           echo `${{ toJson(github) }}`
           echo `${{ toJson(vars) }}`
