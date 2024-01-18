@@ -103,7 +103,7 @@ jobs:
                 const branchExists = branches.some(branch => branch.name === branchName);
 
                 if (!branchExists) {
-                  await github.git.createRef({
+                  await github.rest.git.createRef({
                     owner,
                     repo,
                     ref: `refs/heads/${branchName}`,
