@@ -73,36 +73,35 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
+      # - name: Update ${{env.DEPENDENCY_NAME}}
+      #   if: env.DEPENDENCY_NAME
+      #   run: |
+      #     {
+      #       echo 'UPDATE_RESULT<<EOF'
+      #       pnpm up ${{ env.DEPENDENCY_NAME }}
+      #       echo EOF
+      #     } >> "$GITHUB_ENV"
+
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
-        run: |
-          {
-            echo 'UPDATE_RESULT<<EOF'
-            pnpm up ${{ env.DEPENDENCY_NAME }}
-            echo EOF
-          } >> "$GITHUB_ENV"
-
-      - name: Parse result of update
-        if: env.UPDATE_RESULT
         id: parse-result
         uses: actions/github-script@v7
         with:
           script: |
-            let myOutput = ''
-            const options = {
-              listeners: {
-                stdout: (data) => {
-                  myOutput += data.toString()
-                },
-                silent: true
+            let _Output = ""
+            try {
+              const options = {
+                listeners: {
+                  stdout: (data) => _Output += data.toString()
+                }
               }
+              await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], options)
+            } catch (e) {
+              core.error(`pnpm up error ${e}`)
             }
-            await exec.exec('pnpm', ['up', 'eslint'], options)
-
-            console.log("myOutput",myOutput)
-
-            const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
-            const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+            return {qwe:123}
+            const matchCurrentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+            const matchUpdateVersion = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
               core.setOutput('DEPENDENCY_CURRENT_VERSION', matchCurrentVersion[1])
               core.setOutput('DEPENDENCY_UPDATE_VERSION', matchUpdateVersion[1])
@@ -135,6 +134,8 @@ jobs:
           branch: ${{ steps.parse-result.outputs.BRANCH_NAME }}
           delete-branch: true
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
+          body: |
+            Update report
 
       # - name: git status
       #   run: |
