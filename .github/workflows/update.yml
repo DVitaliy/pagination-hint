@@ -43,6 +43,13 @@ jobs:
               }
             }
 
+      - name: Early exit
+        run: |
+          gh run cancel ${{ github.run_id }}
+          gh run watch ${{ github.run_id }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Checkout
         if: env.DEPENDENCY_NAME
         uses: actions/checkout@v4
