@@ -75,9 +75,12 @@ jobs:
 
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
-        id: pnpm-update
-        run: pnpm up @jestt/tt
-        # run: pnpm up ${{ env.DEPENDENCY_NAME }}
+        run: |
+          {
+            echo 'UPDATE_RESULT<<EOF'
+            pnpm up ${{ env.DEPENDENCY_NAME }}
+            echo EOF
+          } >> "$GITHUB_ENV"
 
       - name: Parse result of update
         if: env.UPDATE_RESULT
@@ -97,9 +100,10 @@ jobs:
                 }
               }
             }
-            await exec.exec('pnpm', ['up', 'eslint'], options);
-            console.log("myOutput",myOutput);
-            console.log("myError",myError);
+            const res = await exec.exec('pnpm', ['up', 'eslint'], options)
+            console.log("res",res)
+            console.log("myOutput",myOutput)
+            console.log("myError",myError)
 
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
