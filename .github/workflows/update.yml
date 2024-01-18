@@ -100,9 +100,9 @@ jobs:
                 }
               }
             }
-            await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], options);
-            console.log(myOutput);
-            console.log(myError);
+            await exec.exec('pnpm', ['up', 'eslint'], options);
+            console.log("myOutput",myOutput);
+            console.log("myError",myError);
 
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
