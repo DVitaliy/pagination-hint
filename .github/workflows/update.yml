@@ -18,6 +18,8 @@ jobs:
         id: defining-dependency
         with:
           script: |
+            console.log("not match".match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i")))
+            console.log("bump not match".match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i")))
             let matchString = ""
             switch (context.payload.action) {
               case "edited":
@@ -34,7 +36,7 @@ jobs:
               }
             }
             if (matchString) {
-              const match = matchString.match("${{ vars.BUMP_REGEXP_PATTERN }}")
+              const match = matchString.match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i"))
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
                 core.setOutput('DEPENDENCY_NAME', match[1])
@@ -65,7 +67,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Save cache node_modules
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: env.DEPENDENCY_NAME && steps.restore-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@v3
         with:
           path: node_modules
