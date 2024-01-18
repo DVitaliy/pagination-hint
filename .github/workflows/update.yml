@@ -91,27 +91,25 @@ jobs:
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
+              const {owner, repo} = context.repo
+              const {sha} = context
+              const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
+              const branchName = BUMP_FULL_NAME.replace(/\s+/g, '-')
+              try {
+                const { data: branches } = await github.repos.listBranches({
+                  owner,
+                  repo,
+                })
+                const branchExists = branches.some(branch => branch.name === branchName);
 
-              const BRANCH_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
-
+                console.log(branches)
+                console.log(branchExists)
+              } catch (e) {
+                console.log(`error`, e)
+              }
                 core.exportVariable('LIB_V_FROM', matchCurrentVersion[1])
                 core.exportVariable('LIB_V_TO', matchUpdateVersion[1])
-
-                try {
-                  const branchInfo = await github.rest.repos.getBranch({
-                    repo: context.repo.owner,
-                    branch: BRANCH_NAME.replace(/\s+/g, '-'),
-                    owner: context.repo.repo
-                  })
-                  console.log(`Found branch ${branchInfo}`)
-                } catch (e) {
-                  if (e.message === 'Branch not found') {
-                  }
-                  console.log(`error`, e)
-                }
             }
-            console.log("matchCurrentVersion"+ matchCurrentVersion)
-            console.log("matchUpdateVersion"+ matchUpdateVersion)
 
       - name: Commit and Push Changes
         if: env.BRANCH_NAME
