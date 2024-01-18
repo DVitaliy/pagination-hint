@@ -130,10 +130,16 @@ jobs:
       - name: git branch -a
         run: git branch -a
 
-        # run: |
-        #   echo `${{ toJson(github) }}`
-        #   echo `${{ toJson(vars) }}`
-        #   echo `${{ toJson(steps) }}`
+      - name: git log -1 --stat
+        run: git log -1 --stat
+      - name: git log -2 --stat
+        run: git log -2 --stat
+
+      - name: test
+        run: |
+          echo `${{ toJson(github) }}`
+          echo `${{ toJson(vars) }}`
+          echo `${{ toJson(steps) }}`
 
       # - name: Push Commit for exists branch NOT IMPLEMENTED YET
       #   if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
