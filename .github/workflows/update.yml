@@ -10,8 +10,6 @@ jobs:
   defining-dependency:
     name: Defining the dependency to update
     runs-on: ubuntu-latest
-    outputs:
-      DEPENDENCY_NAME: ${{ steps.defining-dependency.outputs.DEPENDENCY_NAME }}
 
     steps:
       - name: Defining the dependency to update
@@ -21,6 +19,7 @@ jobs:
           script: |
             console.log(context)
             console.log(context.payload.issue.user)
+            console.log(context.repo)
             const bumpReg = /^bump\s([^\s]+)/i
             let matchString = ""
             switch (context.payload.action) {
@@ -44,13 +43,6 @@ jobs:
                 core.setOutput('DEPENDENCY_NAME', match[1])
               }
             }
-  update-dependency:
-    name: Update Dependency
-    runs-on: ubuntu-latest
-    needs: defining-dependency
-    steps:
-      - env:
-          DEPENDENCY_NAME: ${{needs.defining-dependency.outputs.DEPENDENCY_NAME}}
 
       - name: Checkout
         if: env.DEPENDENCY_NAME
@@ -99,6 +91,7 @@ jobs:
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
+
               const BRANCH_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
 
                 core.exportVariable('LIB_V_FROM', matchCurrentVersion[1])
