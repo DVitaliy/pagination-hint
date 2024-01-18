@@ -43,10 +43,6 @@ jobs:
               }
             }
 
-      - name: Early exit
-        run: |
-          exit 0
-
       - name: Checkout
         if: env.DEPENDENCY_NAME
         uses: actions/checkout@v4
@@ -127,20 +123,29 @@ jobs:
           delete-branch: true
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
 
-      - name: test
+      - name: git status
+        run: git status
+      - name: git branch -a
+        run: git branch -a
+      - name: git switch
         run: |
-          echo `${{ toJson(github) }}`
-          echo `${{ toJson(vars) }}`
-          echo `${{ toJson(steps) }}`
-
-      - name: Push Commit for exists branch NOT IMPLEMENTED YET
-        if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
-        run: |
-          git pull --ff-only origin ${{ github.head_ref }}
+          git switch -c ${{ steps.parse-result.outputs.BRANCH_NAME }} origin/${{ steps.parse-result.outputs.BRANCH_NAME }}
           git status
           git branch
-          git ls-remote --heads origin
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global user.name "${{ github.actor }}"
-          git commit -am "Updated ${{env.DEPENDENCY_NAME}}"
-          git push origin HEAD:refs/heads/${{ github.head_ref }}
+
+        # run: |
+        #   echo `${{ toJson(github) }}`
+        #   echo `${{ toJson(vars) }}`
+        #   echo `${{ toJson(steps) }}`
+
+      # - name: Push Commit for exists branch NOT IMPLEMENTED YET
+      #   if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
+      #   run: |
+      #     git pull --ff-only origin ${{ github.head_ref }}
+      #     git status
+      #     git branch
+      #     git ls-remote --heads origin
+      #     git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+      #     git config --global user.name "${{ github.actor }}"
+      #     git commit -am "Updated ${{env.DEPENDENCY_NAME}}"
+      #     git push origin HEAD:refs/heads/${{ github.head_ref }}
