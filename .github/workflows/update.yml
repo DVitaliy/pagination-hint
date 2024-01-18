@@ -93,10 +93,11 @@ jobs:
             const options = {
               listeners: {
                 stdout: (data) => {
-                myOutput += data.toString()
-              },
-              stderr: (data) => {
-                myError += data.toString()
+                  myOutput += data.toString()
+                },
+                stderr: (data) => {
+                  myError += data.toString()
+                }
               }
             }
             await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], options);
