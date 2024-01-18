@@ -144,39 +144,19 @@ jobs:
           body: |
             Update ${{ env.DEPENDENCY_NAME }}
 
-      # - name: git status
-      #   run: |
-      #     git branch
-      #     git status
-      #     git show --summary
-      # - name: git branch -a
-      #   id: test-output
-      #   run: git branch -a
-
-      # - name: git3
-      #   run: |
-      #     git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-      #     git config --global user.name "${{ github.actor }}"
-      #     git fetch
-      #     git checkout ${{ github.head_ref }}
-      #     git commit -am "Updated11 ${{env.DEPENDENCY_NAME}}"
-      #     git pull origin ${{ github.head_ref }}
-      #     git push origin HEAD:${{ github.head_ref }}
+      - name: Push Commit for exists branch
+        if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
+        run: |
+          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+          git config --global user.name "${{ github.actor }}"
+          git fetch
+          git checkout ${{ github.head_ref }}
+          git commit -am "Updated ${{ env.DEPENDENCY_NAME }} to ${{ steps.parse-result.outputs.DEPENDENCY_UPDATE_VERSION }}"
+          git pull origin ${{ github.head_ref }}
+          git push origin HEAD:${{ github.head_ref }}
 
       - name: test
         run: |
           echo `${{ toJson(steps) }}`
           echo `${{ toJson(vars) }}`
           echo `${{ toJson(github) }}`
-
-      # - name: Push Commit for exists branch NOT IMPLEMENTED YET
-      #   if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
-      #   run: |
-      #     git pull --ff-only origin ${{ github.head_ref }}
-      #     git status
-      #     git branch
-      #     git ls-remote --heads origin
-      #     git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-      #     git config --global user.name "${{ github.actor }}"
-      #     git commit -am "Updated ${{env.DEPENDENCY_NAME}}"
-      #     git push origin HEAD:refs/heads/${{ github.head_ref }}
