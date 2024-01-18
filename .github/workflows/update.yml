@@ -117,7 +117,6 @@ jobs:
       - name: Create PR for `issue`
         if: env.BRANCH_DOEST_NOT_EXIST && github.event_name == 'issues'
         uses: peter-evans/create-pull-request@v5
-        env:
         with:
           commit-message: Update
           branch: ${{ steps.parse-result.outputs.BRANCH_NAME }}
