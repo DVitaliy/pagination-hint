@@ -75,12 +75,9 @@ jobs:
 
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
-        run: |
-          {
-            echo 'UPDATE_RESULT<<EOF'
-            pnpm up ${{ env.DEPENDENCY_NAME }}
-            echo EOF
-          } >> "$GITHUB_ENV"
+        id: pnpm-update
+        run: pnpm up jestttt
+        # run: pnpm up ${{ env.DEPENDENCY_NAME }}
 
       - name: Parse result of update
         if: env.UPDATE_RESULT
