@@ -18,7 +18,6 @@ jobs:
         id: defining-dependency
         with:
           script: |
-            const bumpReg = /^bump\s([^\s]+)/i
             let matchString = ""
             switch (context.payload.action) {
               case "edited":
@@ -35,7 +34,7 @@ jobs:
               }
             }
             if (matchString) {
-              const match = matchString.match(bumpReg)
+              const match = matchString.match("${{ vars.BUMP_REGEXP_PATTERN }}")
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
                 core.setOutput('DEPENDENCY_NAME', match[1])
