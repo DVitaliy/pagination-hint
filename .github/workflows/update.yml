@@ -73,15 +73,6 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
-      # - name: Update ${{env.DEPENDENCY_NAME}}
-      #   if: env.DEPENDENCY_NAME
-      #   run: |
-      #     {
-      #       echo 'UPDATE_RESULT<<EOF'
-      #       pnpm up ${{ env.DEPENDENCY_NAME }}
-      #       echo EOF
-      #     } >> "$GITHUB_ENV"
-
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
         id: parse-result
@@ -147,8 +138,8 @@ jobs:
       - name: Push Commit for exists branch
         if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
         run: |
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git config --global user.name "${{ github.actor }}"
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
           git fetch
           git checkout ${{ github.head_ref }}
           git commit -am "Updated ${{ env.DEPENDENCY_NAME }} to ${{ steps.parse-result.outputs.DEPENDENCY_UPDATE_VERSION }}"
