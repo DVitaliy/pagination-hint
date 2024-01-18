@@ -36,7 +36,7 @@ jobs:
               const match = matchString.match(new RegExp("${{ vars.BUMP_REGEXP_PATTERN }}","i"))
               if (match) {
                 core.exportVariable('DEPENDENCY_NAME', match[1])
-                console.log(`The dependency name - matched: ${match[1]}`)
+                core.info(`The dependency name - matched: ${match[1]}`)
               }
             }
 
@@ -90,7 +90,6 @@ jobs:
             if (matchCurrentVersion && matchUpdateVersion) {
               const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${matchCurrentVersion[1]} to ${matchUpdateVersion[1]}`
               const {owner, repo} = context.repo
-              const {sha} = context
               const branchName = BUMP_FULL_NAME.replace(/\s+/g, '-')
               try {
                 const { data: branches } = await github.rest.repos.listBranches({
@@ -99,9 +98,9 @@ jobs:
                 })
                 const branchExists = branches.some(branch => branch.name === branchName);
                 if (branchExists) {
-                  console.log(`The branch ${branchName} exists`)
+                  core.info(`The branch ${branchName} exists`)
                 } else {
-                  console.log(`The branch ${branchName} doest not exist`)
+                  core.info(`The branch ${branchName} doest not exist`)
                   core.exportVariable('BRANCH_DOEST_NOT_EXIST', BUMP_FULL_NAME)
                   core.setOutput('BRANCH_NAME', branchName)
                 }
