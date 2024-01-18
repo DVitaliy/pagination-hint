@@ -9,6 +9,7 @@ on:
 jobs:
   defining-dependency:
     name: Defining the dependency to update
+    if: ${{ vars.BUMP_REGEXP_PATTERN }}
     runs-on: ubuntu-latest
 
     steps:
@@ -61,7 +62,7 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
-        if: steps.restore-cache.outputs.cache-hit != 'true'
+        if: env.DEPENDENCY_NAME && steps.restore-cache.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Save cache node_modules
