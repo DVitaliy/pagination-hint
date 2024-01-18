@@ -76,7 +76,7 @@ jobs:
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
         id: pnpm-update
-        run: pnpm up jestttt
+        run: pnpm up @jestt/tt
         # run: pnpm up ${{ env.DEPENDENCY_NAME }}
 
       - name: Parse result of update
