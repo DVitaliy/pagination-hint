@@ -117,7 +117,7 @@ jobs:
         uses: peter-evans/create-pull-request@v5
         with:
           commit-message: Update
-          branch: $(echo "${{ env.BRANCH_DOEST_NOT_EXIST }}" | sed 's/\s\+/-/g')
+          branch: ${{ (echo "${{ env.BRANCH_DOEST_NOT_EXIST }}" | sed 's/\s\+/-/g') }}
           delete-branch: true
           title: ${{ env.BRANCH_DOEST_NOT_EXIST }}
           body: |
