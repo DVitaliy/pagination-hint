@@ -87,6 +87,7 @@ jobs:
         id: parse-result
         uses: actions/github-script@v7
         with:
+          result-encoding: json
           script: |
             let _Output = ""
             try {
@@ -99,7 +100,7 @@ jobs:
             } catch (e) {
               core.error(`pnpm up error ${e}`)
             }
-            return {qwe:123}
+            return {"qwe":123}
             const matchCurrentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             if (matchCurrentVersion && matchUpdateVersion) {
