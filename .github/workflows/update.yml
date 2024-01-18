@@ -132,7 +132,7 @@ jobs:
       - name: Push Commit for exists branch NOT IMPLEMENTED YET
         if: env.DEPENDENCY_NAME && github.event_name == 'pull_request'
         run: |
-          git pull origin ${{ github.head_ref }}
+          git pull --ff-only origin ${{ github.head_ref }}
           git status
           git branch
           git ls-remote --heads origin
