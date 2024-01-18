@@ -89,21 +89,17 @@ jobs:
         with:
           script: |
             let myOutput = ''
-            let myError = ''
             const options = {
               listeners: {
                 stdout: (data) => {
                   myOutput += data.toString()
                 },
-                stderr: (data) => {
-                  myError += data.toString()
-                }
+                silent: true
               }
             }
-            const res = await exec.exec('pnpm', ['up', 'eslint'], options)
-            console.log("res",res)
+            await exec.exec('pnpm', ['up', 'eslint'], options)
+
             console.log("myOutput",myOutput)
-            console.log("myError",myError)
 
             const matchCurrentVersion = `${{ env.UPDATE_RESULT }}`.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
             const matchUpdateVersion = `${{ env.UPDATE_RESULT }}`.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
