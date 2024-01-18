@@ -135,10 +135,16 @@ jobs:
         run: git log -1 --stat
       - name: git log -2 --stat
         run: git log -2 --stat
-      - name: git
+      - name: git1
         run: |
           git fetch
           git branch
+          git checkout ${{ github.head_ref }}
+      - name: git2
+        run: |
+          git branch
+          git log -1 --stat
+          git log -2 --stat
 
       - name: test
         run: |
