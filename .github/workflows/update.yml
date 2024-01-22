@@ -76,30 +76,32 @@ jobs:
       - name: Update ${{env.DEPENDENCY_NAME}}
         if: env.DEPENDENCY_NAME
         id: parse-result
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
-            let _Output = ""
             try {
+              let _Output = ""
               await exec.exec('pnpm', ['up', '${{ env.DEPENDENCY_NAME }}'], {
                 listeners: {
                   stdout: (data) => _Output += data.toString()
                 }
               })
+
+              if (!_Output) return
+
+              const currentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+              const updateVersion  = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
+              if (currentVersion && updateVersion) {
+                const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${currentVersion[1]} to ${updateVersion[1]}`
+
+                core.setOutput('DEPENDENCY_CURRENT_VERSION', currentVersion[1])
+                core.setOutput('DEPENDENCY_UPDATE_VERSION', updateVersion[1])
+                core.setOutput('BUMP_FULL_NAME', BUMP_FULL_NAME)
+                core.exportVariable('BRANCH_NAME', BUMP_FULL_NAME.replace(/\s+/g, '-'))
+              }
             } catch (e) {
               core.error(`pnpm up error ${e}`)
-            }
-            if (!_Output) return
-
-            const currentVersion = _Output.match(/^\- ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
-            const updateVersion  = _Output.match(/^\+ ${{ env.DEPENDENCY_NAME }} ([\S]+)/m)
-            if (currentVersion && updateVersion) {
-              const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${currentVersion[1]} to ${updateVersion[1]}`
-
-              core.setOutput('DEPENDENCY_CURRENT_VERSION', currentVersion[1])
-              core.setOutput('DEPENDENCY_UPDATE_VERSION', updateVersion[1])
-              core.setOutput('BUMP_FULL_NAME', BUMP_FULL_NAME)
-              core.exportVariable('BRANCH_NAME', BUMP_FULL_NAME.replace(/\s+/g, '-'))
             }
 
       - name: Check exists branch ${{env.BRANCH_NAME}}
