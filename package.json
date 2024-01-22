@@ -77,6 +77,6 @@
     "@dvitaliy:registry": "https://npm.pkg.github.com/"
   },
   "dependencies": {
-    "@poolzfinance/api4": "^1.11.0"
+    "@poolzfinance/api4": "1.11.0"
   }
 }
