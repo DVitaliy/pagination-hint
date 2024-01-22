@@ -75,5 +75,8 @@
   "homepage": "https://github.com/DVitaliy/pagination-hint#readme",
   "publishConfig": {
     "@dvitaliy:registry": "https://npm.pkg.github.com/"
+  },
+  "dependencies": {
+    "@poolzfinance/api4": "^1.11.0"
   }
 }
