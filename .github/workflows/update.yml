@@ -90,8 +90,8 @@ jobs:
 
               if (!_Output) return
 
-              const currentVersion = _Output.match(new RegExp(`^\\- ${{ env.DEPENDENCY_NAME }} ([\\S]+)`, 'm')
-              const updateVersion  = _Output.match(new RegExp(`^\\+ ${{ env.DEPENDENCY_NAME }} ([\\S]+)`, 'm')
+              const currentVersion = _Output.match(new RegExp(`^\\- ${{ env.DEPENDENCY_NAME }} ([\\S]+)`, 'm'))
+              const updateVersion  = _Output.match(new RegExp(`^\\+ ${{ env.DEPENDENCY_NAME }} ([\\S]+)`, 'm'))
               if (currentVersion && updateVersion) {
                 const BUMP_FULL_NAME = `Bump ${{ env.DEPENDENCY_NAME }} from ${currentVersion[1]} to ${updateVersion[1]}`
 
