@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@poolzfinance/api4':
-    specifier: 1.11.0
-    version: 1.11.0
+    specifier: ^1.11.3
+    version: 1.11.3
 
 devDependencies:
   '@tsconfig/recommended':
@@ -744,8 +744,8 @@ packages:
       fastq: 1.16.0
     dev: true
 
-  /@poolzfinance/api4@1.11.0:
-    resolution: {integrity: sha512-tRCP3s/PtImZfz7ddc5ZXgGGGkIp+cnIK5KcegnPUtI9+ab6lhB7rVt9V/fdjgHfrw/0/6BWJeUIuchLg/Arhg==}
+  /@poolzfinance/api4@1.11.3:
+    resolution: {integrity: sha512-bzofIXT54umLy7GYPEIe/wJyrjkx0ELmgu95Pabiep9CqsK9kW7K4IT9HkPwu9wfG0GuOO2absQVbBc27lojNg==}
     dependencies:
       '@apollo/client': 3.8.10(graphql@16.8.1)(react@18.2.0)
       graphql: 16.8.1
